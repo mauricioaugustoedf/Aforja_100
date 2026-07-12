@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Descubra seu Nível de Pilar — Método Homem Pilar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@500;700;900&family=Open+Sans:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#050505;
+    --card:#0D0D0D;
+    --line:#242424;
+    --gold:#E39E63;
+    --red:#D63B2F;
+    --white:#FFFFFF;
+    --grey:#A8A8A8;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    background:var(--bg);
+    color:var(--white);
+    font-family:'Open Sans', sans-serif;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    overflow-x:hidden;
+  }
+
+  /* ambient texture */
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:
+      radial-gradient(circle at 20% 10%, rgba(227,158,99,0.07), transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(214,59,47,0.05), transparent 45%);
+    pointer-events:none;
+    z-index:0;
+  }
+
+  .shell{
+    width:100%;
+    max-width:460px;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    padding:24px 20px 40px;
+    position:relative;
+    z-index:1;
+  }
+
+  /* ===== TOPO / PILAR PROGRESSO ===== */
+  .topo{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:34px;
+  }
+  .pilar-track{
+    display:flex;
+    flex-direction:column-reverse;
+    gap:3px;
+    width:14px;
+    height:46px;
+  }
+  .pilar-bloco{
+    flex:1;
+    background:#1B1B1B;
+    border:1px solid #2E2E2E;
+    border-radius:1px;
+    transition:background .4s ease, border-color .4s ease;
+  }
+  .pilar-bloco.ativo{
+    background:var(--gold);
+    border-color:var(--gold);
+  }
+  .topo-texto{ flex:1; }
+  .marca{
+    font-family:'League Spartan', sans-serif;
+    font-size:11px;
+    letter-spacing:2px;
+    color:var(--gold);
+    text-transform:uppercase;
+  }
+  .passo{
+    font-family:'Open Sans', sans-serif;
+    font-style:italic;
+    font-size:11px;
+    color:var(--grey);
+    margin-top:2px;
+  }
+
+  /* ===== TELA INTRO ===== */
+  .tela{ display:none; flex:1; flex-direction:column; }
+  .tela.ativa{ display:flex; animation:fadein .35s ease; }
+  @keyframes fadein{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
+
+  .intro{ justify-content:center; text-align:center; flex:1; }
+  .intro .eyebrow{
+    font-family:'Open Sans', sans-serif;
+    font-style:italic;
+    color:var(--grey);
+    font-size:13px;
+    letter-spacing:1px;
+    margin-bottom:10px;
+  }
+  .intro h1{
+    font-family:'League Spartan', sans-serif;
+    font-weight:900;
+    font-size:34px;
+    line-height:1.12;
+    text-transform:uppercase;
+    color:var(--white);
+    margin-bottom:14px;
+  }
+  .intro h1 span{ color:var(--gold); }
+  .intro p{
+    font-family:'Open Sans', sans-serif;
+    font-style:italic;
+    font-size:14px;
+    color:#CFCFCF;
+    line-height:1.6;
+    max-width:340px;
+    margin:0 auto 30px;
+  }
+  .pilar-hero{
+    display:flex;
+    justify-content:center;
+    align-items:flex-end;
+    gap:6px;
+    height:70px;
+    margin-bottom:30px;
+  }
+  .pilar-hero .b{
+    width:10px;
+    background:linear-gradient(180deg, var(--gold), #7A5A10);
+    border-radius:1px;
+    animation:subir 1.8s ease-in-out infinite;
+  }
+  .pilar-hero .b:nth-child(1){ height:30px; animation-delay:0s; }
+  .pilar-hero .b:nth-child(2){ height:50px; animation-delay:.15s; }
+  .pilar-hero .b:nth-child(3){ height:70px; animation-delay:.3s; }
+  .pilar-hero .b:nth-child(4){ height:46px; animation-delay:.45s; }
+  .pilar-hero .b:nth-child(5){ height:36px; animation-delay:.6s; }
+  @keyframes subir{ 0%,100%{ opacity:.55; } 50%{ opacity:1; } }
+
+  /* ===== PERGUNTAS ===== */
+  .pergunta-titulo{
+    font-family:'League Spartan', sans-serif;
+    font-weight:700;
+    font-size:22px;
+    line-height:1.25;
+    color:var(--white);
+    margin-bottom:22px;
+  }
+  .opcoes{ display:flex; flex-direction:column; gap:10px; }
+  .opcao{
+    background:var(--card);
+    border:1px solid var(--line);
+    color:var(--white);
+    font-family:'Open Sans', sans-serif;
+    font-size:14.5px;
+    text-align:left;
+    padding:15px 16px;
+    border-radius:6px;
+    cursor:pointer;
+    transition:border-color .2s ease, background .2s ease, transform .15s ease;
+  }
+  .opcao:hover{ border-color:var(--gold); }
+  .opcao:active{ transform:scale(0.98); }
+  .opcao.selecionada{
+    background:var(--gold);
+    border-color:var(--gold);
+    color:#050505;
+    font-weight:600;
+  }
+
+  .voltar{
+    align-self:flex-start;
+    background:none;
+    border:none;
+    color:var(--grey);
+    font-family:'Open Sans', sans-serif;
+    font-style:italic;
+    font-size:12.5px;
+    margin-bottom:16px;
+    cursor:pointer;
+    padding:0;
+  }
+  .voltar:hover{ color:var(--gold); }
+
+  /* ===== RESULTADO ===== */
+  .resultado{ flex:1; display:flex; flex-direction:column; justify-content:center; }
+  .resultado .tag-nivel{
+    align-self:flex-start;
+    background:#1A1A1A;
+    border:1px solid var(--gold);
+    color:var(--gold);
+    font-family:'League Spartan', sans-serif;
+    font-size:11px;
+    letter-spacing:1px;
+    padding:4px 12px;
+    border-radius:12px;
+    margin-bottom:14px;
+    text-transform:uppercase;
+  }
+  .resultado h2{
+    font-family:'League Spartan', sans-serif;
+    font-weight:900;
+    font-size:30px;
+    line-height:1.1;
+    text-transform:uppercase;
+    color:var(--white);
+    margin-bottom:16px;
+  }
+  .resultado h2 span{ color:var(--gold); }
+  .resultado .desc{
+    font-family:'Open Sans', sans-serif;
+    font-style:italic;
+    font-size:14px;
+    color:#D8D8D8;
+    line-height:1.65;
+    margin-bottom:26px;
+  }
+  .resultado .box-oferta{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-left:3px solid var(--gold);
+    border-radius:6px;
+    padding:18px;
+    margin-bottom:22px;
+  }
+  .box-oferta .box-titulo{
+    font-family:'League Spartan', sans-serif;
+    font-size:12px;
+    letter-spacing:1px;
+    color:var(--gold);
+    text-transform:uppercase;
+    margin-bottom:8px;
+  }
+  .box-oferta p{
+    font-family:'Open Sans', sans-serif;
+    font-style:italic;
+    font-size:13px;
+    color:#CFCFCF;
+    line-height:1.55;
+  }
+  .box-oferta .preco{
+    font-family:'League Spartan', sans-serif;
+    font-weight:900;
+    font-size:26px;
+    color:var(--white);
+    margin-top:10px;
+  }
+  .box-oferta .preco span{
+    font-family:'Open Sans', sans-serif;
+    font-style:italic;
+    font-size:12px;
+    color:var(--grey);
+    font-weight:400;
+  }
+
+  .cta-btn{
+    display:block;
+    width:100%;
+    background:var(--red);
+    color:var(--white);
+    text-align:center;
+    text-decoration:none;
+    font-family:'League Spartan', sans-serif;
+    font-weight:700;
+    font-size:15px;
+    letter-spacing:0.5px;
+    text-transform:uppercase;
+    padding:16px;
+    border-radius:6px;
+    border:none;
+    cursor:pointer;
+  }
+  .cta-sub{
+    text-align:center;
+    font-family:'Open Sans', sans-serif;
+    font-style:italic;
+    font-size:11.5px;
+    color:var(--grey);
+    margin-top:10px;
+  }
+
+  .rodape{
+    text-align:center;
+    font-family:'League Spartan', sans-serif;
+    font-size:11px;
+    letter-spacing:2px;
+    color:#555;
+    margin-top:30px;
+  }
+  .rodape span{ color:var(--gold); }
+
+  @media (min-width:480px){
+    .intro h1{ font-size:38px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <div class="topo">
+    <div class="pilar-track" id="pilarTrack">
+      <div class="pilar-bloco" data-b="1"></div>
+      <div class="pilar-bloco" data-b="2"></div>
+      <div class="pilar-bloco" data-b="3"></div>
+      <div class="pilar-bloco" data-b="4"></div>
+      <div class="pilar-bloco" data-b="5"></div>
+    </div>
+    <div class="topo-texto">
+      <div class="marca">Método Homem Pilar</div>
+      <div class="passo" id="passoTexto">Descubra seu nível</div>
+    </div>
+  </div>
+
+  <!-- TELA 0: INTRO -->
+  <div class="tela ativa" data-tela="intro">
+    <div class="intro">
+      <div class="pilar-hero">
+        <div class="b"></div><div class="b"></div><div class="b"></div><div class="b"></div><div class="b"></div>
+      </div>
+      <div class="eyebrow">5 perguntas · 1 minuto</div>
+      <h1>Qual é o seu<br>nível de <span>pilar?</span></h1>
+      <p>Responda com honestidade. No final você recebe o diagnóstico e o protocolo certo pro seu ponto de partida — sem enrolação.</p>
+      <button class="cta-btn" onclick="irPara(1)">Começar Diagnóstico</button>
+    </div>
+  </div>
+
+  <!-- TELA 1 -->
+  <div class="tela" data-tela="1">
+    <button class="voltar" onclick="irPara('intro')">← voltar</button>
+    <div class="pergunta-titulo">Qual sua faixa de idade?</div>
+    <div class="opcoes" data-pergunta="idade">
+      <button class="opcao" data-valor="18-29">18 a 29 anos</button>
+      <button class="opcao" data-valor="30-39">30 a 39 anos</button>
+      <button class="opcao" data-valor="40-50">40 a 50 anos</button>
+      <button class="opcao" data-valor="51+">51 anos ou mais</button>
+    </div>
+  </div>
+
+  <!-- TELA 2 -->
+  <div class="tela" data-tela="2">
+    <button class="voltar" onclick="irPara(1)">← voltar</button>
+    <div class="pergunta-titulo">Como está seu condicionamento hoje?</div>
+    <div class="opcoes" data-pergunta="condicionamento">
+      <button class="opcao" data-valor="1" data-pontos="1">Parado(a) há mais de 6 meses</button>
+      <button class="opcao" data-valor="2" data-pontos="2">Voltando a treinar agora</button>
+      <button class="opcao" data-valor="3" data-pontos="3">Treino irregular, sem constância</button>
+      <button class="opcao" data-valor="4" data-pontos="4">Treino regular, mas sem resultado</button>
+    </div>
+  </div>
+
+  <!-- TELA 3 -->
+  <div class="tela" data-tela="3">
+    <button class="voltar" onclick="irPara(2)">← voltar</button>
+    <div class="pergunta-titulo">Quanto tempo você tem por dia?</div>
+    <div class="opcoes" data-pergunta="tempo">
+      <button class="opcao" data-valor="1" data-pontos="1">Menos de 15 minutos</button>
+      <button class="opcao" data-valor="2" data-pontos="2">15 a 25 minutos</button>
+      <button class="opcao" data-valor="3" data-pontos="3">25 a 40 minutos</button>
+      <button class="opcao" data-valor="4" data-pontos="4">Mais de 40 minutos</button>
+    </div>
+  </div>
+
+  <!-- TELA 4 -->
+  <div class="tela" data-tela="4">
+    <button class="voltar" onclick="irPara(3)">← voltar</button>
+    <div class="pergunta-titulo">Onde você vai treinar?</div>
+    <div class="opcoes" data-pergunta="local">
+      <button class="opcao" data-valor="casa">Só em casa</button>
+      <button class="opcao" data-valor="academia">Só na academia</button>
+      <button class="opcao" data-valor="ambos">Os dois — decido no dia</button>
+    </div>
+  </div>
+
+  <!-- TELA 5 -->
+  <div class="tela" data-tela="5">
+    <button class="voltar" onclick="irPara(4)">← voltar</button>
+    <div class="pergunta-titulo">Qual sua maior frustração até hoje?</div>
+    <div class="opcoes" data-pergunta="frustracao">
+      <button class="opcao" data-valor="tempo">Nunca sobra tempo</button>
+      <button class="opcao" data-valor="consistencia">Começo e não sustento</button>
+      <button class="opcao" data-valor="direcao">Não sei o que fazer direito</button>
+      <button class="opcao" data-valor="resultado">Já tentei de tudo e nada resolve</button>
+    </div>
+  </div>
+
+  <!-- TELA RESULTADO -->
+  <div class="tela" data-tela="resultado">
+    <div class="resultado">
+      <div class="tag-nivel" id="tagNivel">SEU RESULTADO</div>
+      <h2 id="tituloResultado">Pilar <span>em Construção</span></h2>
+      <p class="desc" id="descResultado"></p>
+
+      <div class="box-oferta">
+        <div class="box-titulo">Protocolo recomendado</div>
+        <p>Fase 1 — Condicionamento. 4 semanas, 25 minutos por dia, 4x por semana. Adaptável para casa ou academia — você escolhe no dia.</p>
+        <div class="preco">R$ 37 <span>pagamento único</span></div>
+      </div>
+
+      <a class="cta-btn" href="https://pay.kiwify.com.br/jAjYn5H" id="ctaFinal" target="_blank" rel="noopener">Quero Começar Agora</a>
+      <div class="cta-sub">Acesso imediato após a confirmação do pagamento</div>
+    </div>
+  </div>
+
+  <div class="rodape">@<span>homempilar</span></div>
+
+</div>
+
+<script>
+  const respostas = {};
+  const telas = ["intro","1","2","3","4","5","resultado"];
+
+  function irPara(id){
+    document.querySelectorAll('.tela').forEach(t => t.classList.remove('ativa'));
+    document.querySelector(`.tela[data-tela="${id}"]`).classList.add('ativa');
+    atualizarPilar(id);
+    window.scrollTo(0,0);
+  }
+
+  function atualizarPilar(id){
+    const idx = telas.indexOf(id); // intro=0, perguntas 1..5, resultado=6
+    const blocosAtivos = id === 'intro' ? 0 : (id === 'resultado' ? 5 : idx);
+    document.querySelectorAll('.pilar-bloco').forEach(b => {
+      const n = parseInt(b.dataset.b);
+      b.classList.toggle('ativo', n <= blocosAtivos);
+    });
+    const passo = document.getElementById('passoTexto');
+    if(id === 'intro'){ passo.textContent = 'Descubra seu nível'; }
+    else if(id === 'resultado'){ passo.textContent = 'Diagnóstico completo'; }
+    else { passo.textContent = `Pergunta ${idx} de 5`; }
+  }
+
+  document.querySelectorAll('.opcoes').forEach(grupo => {
+    const perguntaId = grupo.dataset.pergunta;
+    grupo.querySelectorAll('.opcao').forEach(btn => {
+      btn.addEventListener('click', () => {
+        grupo.querySelectorAll('.opcao').forEach(b => b.classList.remove('selecionada'));
+        btn.classList.add('selecionada');
+        respostas[perguntaId] = {
+          valor: btn.dataset.valor,
+          pontos: parseInt(btn.dataset.pontos || 0)
+        };
+
+        const telaAtual = document.querySelector('.tela.ativa').dataset.tela;
+        const proxima = {
+          "1": "2", "2": "3", "3": "4", "4": "5", "5": "resultado"
+        }[telaAtual];
+
+        setTimeout(() => {
+          if(proxima === "resultado"){ montarResultado(); }
+          irPara(proxima);
+        }, 260);
+      });
+    });
+  });
+
+  function montarResultado(){
+    const pontos = (respostas.condicionamento?.pontos || 0) + (respostas.tempo?.pontos || 0);
+    let nivel, titulo, desc;
+
+    if(pontos <= 3){
+      nivel = "PILAR INICIANTE";
+      titulo = 'Pilar <span>Iniciante</span>';
+      desc = "Você tá começando do zero — e não tem problema nenhum nisso. A Fase 1 foi desenhada exatamente pra esse ponto de partida: progressão gradual, sem exagero, sem lesão. Em 4 semanas você constrói a base que a maioria dos homens nunca teve.";
+    } else if(pontos <= 6){
+      nivel = "PILAR EM CONSTRUÇÃO";
+      titulo = 'Pilar <span>em Construção</span>';
+      desc = "Você já tem alguma base, mas ela ainda não virou estrutura. Falta o que sustenta: consistência com progressão real. A Fase 1 entrega exatamente isso — 4 semanas de aumento gradual de intensidade pra transformar esforço solto em resultado.";
+    } else {
+      nivel = "PILAR SÓLIDO";
+      titulo = 'Pilar <span>Sólido</span>';
+      desc = "Você já tem disciplina — o que falta é um sistema que aproveite isso sem te fazer perder tempo reaprendendo o básico. A Fase 1 vai passar rápido pra você, e serve de ponte direta pra Fase 2 — Lapidar.";
+    }
+
+    if(respostas.local?.valor === 'casa'){
+      desc += " Como você vai treinar em casa, todos os exercícios do protocolo já têm versão sem equipamento.";
+    } else if(respostas.local?.valor === 'academia'){
+      desc += " Como você tem academia disponível, o protocolo já vem com a versão completa usando aparelho.";
+    }
+
+    document.getElementById('tagNivel').textContent = nivel;
+    document.getElementById('tituloResultado').innerHTML = titulo;
+    document.getElementById('descResultado').textContent = desc;
+  }
+</script>
+
+</body>
+</html>
