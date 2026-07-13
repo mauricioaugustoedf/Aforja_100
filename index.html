@@ -2,8 +2,10 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Descubra seu Nível de Pilar — Método Homem Pilar</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#050505">
+<meta name="color-scheme" content="dark">
+<title>Descubra seu Nível de Forja — A Forja</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@500;700;900&family=Open+Sans:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
@@ -18,7 +20,7 @@
     --grey:#A8A8A8;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
-  html,body{height:100%;}
+  html,body{height:100%; background:var(--bg);}
   body{
     background:var(--bg);
     color:var(--white);
@@ -318,7 +320,7 @@
       <div class="pilar-bloco" data-b="5"></div>
     </div>
     <div class="topo-texto">
-      <div class="marca">Método Homem Pilar</div>
+      <div class="marca">A Forja</div>
       <div class="passo" id="passoTexto">Descubra seu nível</div>
     </div>
   </div>
@@ -330,7 +332,7 @@
         <div class="b"></div><div class="b"></div><div class="b"></div><div class="b"></div><div class="b"></div>
       </div>
       <div class="eyebrow">5 perguntas · 1 minuto</div>
-      <h1>Qual é o seu<br>nível de <span>pilar?</span></h1>
+      <h1>Qual é o seu<br>nível de <span>forja?</span></h1>
       <p>Responda com honestidade. No final você recebe o diagnóstico e o protocolo certo pro seu ponto de partida — sem enrolação.</p>
       <button class="cta-btn" onclick="irPara(1)">Começar Diagnóstico</button>
     </div>
@@ -404,7 +406,7 @@
 
       <div class="box-oferta">
         <div class="box-titulo">Protocolo recomendado</div>
-        <p>Fase 1 — Condicionamento. 4 semanas, 25 minutos por dia, 4x por semana. Adaptável para casa ou academia — você escolhe no dia.</p>
+        <p>Fase 1 — Moldar. 4 semanas, 25 minutos por dia, 4x por semana. Adaptável para casa ou academia — você escolhe no dia.</p>
         <div class="preco">R$ 37 <span>pagamento único</span></div>
       </div>
 
@@ -413,7 +415,7 @@
     </div>
   </div>
 
-  <div class="rodape">@<span>homempilar</span></div>
+  <div class="rodape">@<span>aforja100</span></div>
 
 </div>
 
@@ -470,17 +472,17 @@
     let nivel, titulo, desc;
 
     if(pontos <= 3){
-      nivel = "PILAR INICIANTE";
-      titulo = 'Pilar <span>Iniciante</span>';
-      desc = "Você tá começando do zero — e não tem problema nenhum nisso. A Fase 1 foi desenhada exatamente pra esse ponto de partida: progressão gradual, sem exagero, sem lesão. Em 4 semanas você constrói a base que a maioria dos homens nunca teve.";
+      nivel = "FERRO BRUTO";
+      titulo = 'Ferro <span>Bruto</span>';
+      desc = "Você tá começando do zero — e não tem problema nenhum nisso. Todo aço já foi minério antes de virar lâmina. A Fase 1 foi desenhada exatamente pra esse ponto de partida: progressão gradual, sem exagero, sem lesão. Em 4 semanas você constrói a base que a maioria dos homens nunca teve.";
     } else if(pontos <= 6){
-      nivel = "PILAR EM CONSTRUÇÃO";
-      titulo = 'Pilar <span>em Construção</span>';
-      desc = "Você já tem alguma base, mas ela ainda não virou estrutura. Falta o que sustenta: consistência com progressão real. A Fase 1 entrega exatamente isso — 4 semanas de aumento gradual de intensidade pra transformar esforço solto em resultado.";
+      nivel = "NA FORJA";
+      titulo = 'Na <span>Forja</span>';
+      desc = "Você já entrou no processo de transformação, mas ainda não tem forma definida. Falta o que o calor e o martelo dão: consistência com progressão real. A Fase 1 entrega exatamente isso — 4 semanas de aumento gradual de intensidade pra transformar esforço solto em estrutura.";
     } else {
-      nivel = "PILAR SÓLIDO";
-      titulo = 'Pilar <span>Sólido</span>';
-      desc = "Você já tem disciplina — o que falta é um sistema que aproveite isso sem te fazer perder tempo reaprendendo o básico. A Fase 1 vai passar rápido pra você, e serve de ponte direta pra Fase 2 — Lapidar.";
+      nivel = "MOLDADO";
+      titulo = '<span>Moldado</span>';
+      desc = "Você já tem disciplina e começou a ganhar forma — o que falta é um sistema que aproveite isso sem te fazer perder tempo reaprendendo o básico. A Fase 1 vai passar rápido pra você, e serve de ponte direta pra Fase 2, quando o aço começa a suportar esforço de verdade.";
     }
 
     if(respostas.local?.valor === 'casa'){
